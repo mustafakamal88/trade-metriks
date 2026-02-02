@@ -8,6 +8,14 @@ import {
   AboutPage,
   ContactPage,
 } from '../features/marketing/pages';
+import {
+  SignInPage,
+  SignUpPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+} from '../features/auth/pages';
+import { AuthGuard } from '../features/auth/components';
+import { Dashboard } from '../features/dashboard/pages';
 
 export function AppRouter() {
   return (
@@ -23,38 +31,29 @@ export function AppRouter() {
           <Route path="/contact" element={<ContactPage />} />
         </Route>
 
-        {/* Auth Routes - Placeholder for Phase 2 */}
-        <Route path="/sign-in" element={<ComingSoon page="Sign In" />} />
-        <Route path="/sign-up" element={<ComingSoon page="Sign Up" />} />
+        {/* Auth Routes */}
+        <Route path="/auth/signin" element={<SignInPage />} />
+        <Route path="/auth/signup" element={<SignUpPage />} />
+        <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <AuthGuard>
+              <Dashboard />
+            </AuthGuard>
+          }
+        />
+
+        {/* Legacy routes - redirect to new auth paths */}
+        <Route path="/sign-in" element={<Navigate to="/auth/signin" replace />} />
+        <Route path="/sign-up" element={<Navigate to="/auth/signup" replace />} />
 
         {/* Catch all - redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
-  );
-}
-
-// Temporary placeholder component for auth pages
-function ComingSoon({ page }: { page: string }) {
-  return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      gap: '1rem',
-      padding: '2rem',
-    }}>
-      <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>
-        {page} - Coming in Phase 2
-      </h1>
-      <p style={{ color: 'var(--text-secondary)' }}>
-        Authentication will be implemented in the next phase
-      </p>
-      <a href="/" style={{ color: 'var(--brand-primary)', marginTop: '1rem' }}>
-        ← Back to Home
-      </a>
-    </div>
   );
 }

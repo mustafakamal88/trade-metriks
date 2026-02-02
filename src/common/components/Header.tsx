@@ -1,8 +1,20 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from './Button';
+import { useAuth } from '../context/useAuth';
 import styles from './Header.module.css';
 
 export function Header() {
+  const navigate = useNavigate();
+  const { user, profile, signOut } = useAuth();
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+
+  const handleSignOut = async () => {
+    setShowProfileDropdown(false);
+    await signOut();
+    navigate('/');
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -29,16 +41,61 @@ export function Header() {
         </nav>
 
         <div className={styles.actions}>
-          <Link to="/sign-in">
-            <Button variant="ghost" size="sm">
-              Sign In
-            </Button>
-          </Link>
-          <Link to="/sign-up">
-            <Button variant="primary" size="sm">
-              Get Started
-            </Button>
-          </Link>
+          {user ? (
+            <div className={styles.profileContainer}>
+              <button
+                className={styles.profileButton}
+                onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+              >
+                {profile?.avatar_url ? (
+                  <img
+                    src={profile.avatar_url}
+                    alt={profile.full_name || 'User avatar'}
+                    className={styles.profileAvatar}
+                  />
+                ) : (
+                  <div className={styles.profileAvatarPlaceholder}>
+                    {profile?.full_name?.charAt(0) || user.email?.charAt(0)}
+                  </div>
+                )}
+                <span className={styles.profileName}>
+                  {profile?.full_name || user.email}
+                </span>
+                <span className={styles.chevron}>▼</span>
+              </button>
+
+              {showProfileDropdown && (
+                <div className={styles.dropdown}>
+                  <Link
+                    to="/dashboard"
+                    className={styles.dropdownLink}
+                    onClick={() => setShowProfileDropdown(false)}
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    className={styles.dropdownButton}
+                    onClick={handleSignOut}
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <Link to="/auth/signin">
+                <Button variant="ghost" size="sm">
+                  Sign In
+                </Button>
+              </Link>
+              <Link to="/auth/signup">
+                <Button variant="primary" size="sm">
+                  Get Started
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
