@@ -3,3 +3,5 @@ export type { ButtonProps, ButtonVariant, ButtonSize } from './Button';
 
 export { Header } from './Header';
 export { Footer } from './Footer';
+export { LoadingSpinner } from './LoadingSpinner';
+
