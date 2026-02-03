@@ -14,12 +14,6 @@ export function AuthGuard({ children }: AuthGuardProps) {
     return <LoadingSpinner />;
   }
 
-  // Redirect to sign in if not authenticated
-  if (!user) {
-    return <Navigate to="/auth/signin" replace />;
-  }
-
-  // Redirect to sign in if not authenticated
   if (!user) {
     return <Navigate to="/auth/signin" replace />;
   }

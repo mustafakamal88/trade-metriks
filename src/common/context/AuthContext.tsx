@@ -19,7 +19,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching profile:', error);
@@ -36,42 +36,57 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Initialize auth state on mount and listen for changes
   useEffect(() => {
     // Check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (session?.user) {
-        const authUser: AuthUser = {
-          id: session.user.id,
-          email: session.user.email || '',
-          user_metadata: session.user.user_metadata,
-        };
-        setUser(authUser);
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        if (session?.user) {
+          const authUser: AuthUser = {
+            id: session.user.id,
+            email: session.user.email || '',
+            user_metadata: session.user.user_metadata,
+          };
+          setUser(authUser);
 
-        const profileData = await fetchProfile(session.user.id);
-        setProfile(profileData);
-      }
-      setLoading(false);
-    });
+          // Profile fetch must never gate auth resolution
+          fetchProfile(session.user.id)
+            .then(setProfile)
+            .catch((err) => console.error('Error fetching profile:', err));
+        }
+      })
+      .catch((err) => {
+        console.error('Error fetching session:', err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
 
     // Listen for auth state changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      try {
+        if (!session?.user) {
+          setUser(null);
+          setProfile(null);
+          setLoading(false);
+          return;
+        }
+
         const authUser: AuthUser = {
           id: session.user.id,
           email: session.user.email || '',
           user_metadata: session.user.user_metadata,
         };
         setUser(authUser);
+        setLoading(false);
 
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          const profileData = await fetchProfile(session.user.id);
-          setProfile(profileData);
-        }
-      } else {
-        setUser(null);
-        setProfile(null);
+        // Profile fetch must never gate auth resolution
+        fetchProfile(session.user.id)
+          .then(setProfile)
+          .catch((err) => console.error('Error fetching profile:', err));
+      } catch (err) {
+        console.error('Error handling auth state change:', err);
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => {
@@ -124,6 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     setError(null);
+    setLoading(true);
     try {
       const { error } = await supabase.auth.signOut();
 
@@ -131,13 +147,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setError(error.message);
         throw error;
       }
-
-      setUser(null);
-      setProfile(null);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Sign out failed';
       setError(errorMessage);
-      throw err;
+    } finally {
+      setUser(null);
+      setProfile(null);
+      setLoading(false);
     }
   };
 
