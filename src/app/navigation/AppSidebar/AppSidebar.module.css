@@ -1,0 +1,205 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 260px;
+  background: #0f1424;
+  color: #e6e8f0;
+}
+
+.wrapper[data-expanded='false'] {
+  width: 76px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4f46e5 0%, #22d3ee 100%);
+  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.35);
+}
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brandTitle {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.brandSubtitle {
+  font-size: 0.75rem;
+  color: rgba(230, 232, 240, 0.72);
+}
+
+.sidenav {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  background: transparent;
+}
+
+.nav :global(.rs-nav-item-content) {
+  font-weight: 500;
+}
+
+.sidenav :global(.rs-sidenav-body) {
+  flex: 1;
+  min-height: 0;
+}
+
+/* collapsed mode: force TRUE center alignment */
+.wrapper[data-expanded='false'] .nav :global(.rs-nav-item),
+.wrapper[data-expanded='false'] .nav :global(.rs-nav-menu) {
+  margin: 6px 10px;
+}
+
+/* Nav item clickable content */
+.wrapper[data-expanded='false'] .nav :global(.rs-nav-item-content) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 12px 0 !important;
+  text-align: center !important;
+}
+
+/* Menu title row (for Nav.Menu) */
+.wrapper[data-expanded='false'] .nav :global(.rs-nav-menu-title) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 12px 0 !important;
+  text-align: center !important;
+}
+
+/* RSuite adds spacing via icon wrappers; remove all offset */
+.wrapper[data-expanded='false'] .nav :global(.rs-nav-item-icon),
+.wrapper[data-expanded='false'] .nav :global(.rs-nav-menu-icon) {
+  margin: 0 !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+/* Sometimes icon sits inside .rs-icon with margins */
+.wrapper[data-expanded='false'] .nav :global(.rs-icon) {
+  margin: 0 !important;
+}
+
+/* Hide the caret arrow for menus in collapsed mode (it causes offset) */
+.wrapper[data-expanded='false'] .nav :global(.rs-nav-menu-toggle) {
+  display: none !important;
+}
+.nav :global(.rs-nav-item) {
+  border-radius: 10px;
+  margin: 2px 8px;
+}
+
+.nav :global(.rs-nav-item > .rs-nav-item-content) {
+  border-radius: 10px;
+}
+
+.nav :global(.rs-nav-item-active > .rs-nav-item-content) {
+  background: rgba(79, 70, 229, 0.18);
+  border: 1px solid rgba(79, 70, 229, 0.25);
+}
+
+.nav :global(.rs-nav-item:not(.rs-nav-item-active) > .rs-nav-item-content:hover) {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* RSuite sometimes puts padding on the inner clickable element */
+.wrapper[data-expanded='false'] .nav :global(.rs-nav-item-content > a),
+.wrapper[data-expanded='false'] .nav :global(.rs-nav-item-content > button),
+.wrapper[data-expanded='false'] .nav :global(.rs-nav-menu-title > a),
+.wrapper[data-expanded='false'] .nav :global(.rs-nav-menu-title > button) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+.nav :global(.rs-nav-item) {
+  border-radius: 10px;
+  margin: 2px 8px;
+}
+.wrapper[data-expanded='true'] .nav :global(.rs-nav-item) {
+  border-radius: 10px;
+  margin: 2px 8px;
+}
+
+/* collapsed sidebar layout */
+.wrapper[data-expanded='false'] {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* KEY: aligns everything to logo center */
+}
+
+/* logo stays centered */
+.wrapper[data-expanded='false'] .brand {
+  width: 100%;
+  justify-content: center;
+}
+
+/* collapsed nav icons */
+.collapsedNav {
+  margin-top: 24px; /* spacing below logo */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* icons centered under logo */
+  gap: 14px;
+  padding: 18px 0;
+  width: 100%;
+}
+
+.iconButton {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sidenavFooter {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.wrapper[data-expanded='false'] .sidenavFooter :global(.rs-sidenav-toggle) {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.iconButton:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.iconButtonActive {
+  background: rgba(79, 70, 229, 0.18);
+  border: 1px solid rgba(79, 70, 229, 0.25);
+}
