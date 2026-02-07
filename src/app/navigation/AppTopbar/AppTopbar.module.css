@@ -1,0 +1,40 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0f1424;
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  color: rgba(230, 232, 240, 0.7);
+}
+
+.logoutButton {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: #e6e8f0;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.logoutButton:hover {
+  border-color: rgba(79, 70, 229, 0.6);
+  background: rgba(79, 70, 229, 0.16);
+}
